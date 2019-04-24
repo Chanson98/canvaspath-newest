@@ -1,0 +1,401 @@
+{% extends "person_base.html" %}
+{% load staticfiles %}
+{% block personal-right %}
+    <head>
+        {##}
+        {#        <meta charset="utf-8">#}
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+              integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+              crossorigin="anonymous">
+        <style>
+            .fa-times {
+                font-size: 15px;
+            }
+
+            .panel {
+                height: 285px;
+                margin-bottom: 0;
+                margin-top: 10px;
+            }
+
+            .panel-heading {
+                text-align: right;
+            }
+
+            /*加号*/
+            .icon-add-50 {
+                position: relative;
+                box-sizing: border-box;
+                width: 50%;
+                height: 50%;
+                border: 2px dashed #ffdd72;
+                border-radius: 50%;
+            }
+
+            .icon-add-50:before {
+                content: '';
+                position: absolute;
+                width: 30px;
+                height: 2px;
+                left: 50%;
+                top: 50%;
+                margin-left: -15px;
+                margin-top: -1px;
+                background-color: #ffdd72;
+            }
+
+            .icon-add-50:after {
+                content: '';
+                position: absolute;
+                width: 2px;
+                height: 30px;
+                left: 50%;
+                top: 50%;
+                margin-left: -1px;
+                margin-top: -15px;
+                background-color: #ffdd72;
+            }
+
+            .updatepanel {
+                border: 1px solid #ffdd72;
+                text-align: center;
+            }
+
+            .updatepanel .addbox {
+                vertical-align: middle;
+                height: 285px;
+                line-height: 285px;
+            }
+
+{#            #image {#}
+{#                overflow: hidden;#}
+{#            }#}
+        </style>
+    </head>
+    <div class="col-md-8 products-right">
+				<div class="products-right-grid">
+					<div class="products-right-grids-position animated wow slideInRight" data-wow-delay=".5s" style="margin-top: 60px;">
+                        <h4>CHANGE PERSONAL INFORMATION</h4>
+                        <br><br>
+                        <div class="login-form-grids" style="width: 100%;">
+{#                        <form>#}
+                            {% csrf_token %}
+                            <div id="get_choices"  method="get" data-wow-delay=".5s">
+						        <div >
+                                    <select id="prov" onchange="showCity($('#prov'), $('#city'), $('#district'), $('#school'), $('#major'), $('#grade'))" style="height: 30px">
+                                            <option>=请选择省份=</option>
+                                    </select>
+                                </div>
+                                <div >
+                                    <select id="city" onchange="showCountry($('#prov'), $('#city'), $('#district'), $('#school'), $('#major'), $('#grade'))" style="height: 30px">
+                                            <option>=请选择城市=</option>
+                                    </select>
+                                </div>
+                                <div >
+                                    <select id="district" onchange="selecCountry($('#prov'), $('#city'), $('#district'), $('#school'), $('#major'), $('#grade'))" style="height: 30px">
+                                            <option>=请选择县区=</option>
+                                    </select>
+                                </div>
+                                <div >
+                                    <select id="school" onchange="selecSchool($('#prov'), $('#city'), $('#district'), $('#school'), $('#major'), $('#grade'))">
+                                        <option value="0">=请选择学校=</option>
+                                    </select>
+                                </div>
+                                <div >
+                                    <select id="major" onchange="selectMajor($('#prov'), $('#city'), $('#district'), $('#school'), $('#major'), $('#grade'))">
+                                        <option value="0">=请选择专业=</option>
+                                    </select>
+                                </div>
+                                <div >
+                                    <select id="grade" onchange="">
+                                        <option value="">=请选择年级=</option>
+                                    </select>
+                                </div>
+
+						<div class="clearfix"> </div>
+                    </div>
+                            <br>
+{#                            <p style="color: red;" id="ceshi">ceshi</p>#}
+{#                                <label for="file">上传头像：</label><input id="file" type="file" style="position: relative;background: #FFC229;color: #FFF;"/>#}
+                            <label for="file">上传头像：</label>
+
+                            <div class="wrapper wrapper-content animated fadeIn" style="width: 100%; height: 50%; margin-left: 10%; float: left">
+                                <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="ibox">
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-sm-8" id="updatebox">
+                                                    <label for="file" style="width: 100%">
+                                                        <div class="panel updatepanel">
+                                                            <div class="addbox"><span class="icon-add-50"></span></div>
+                                                            <input type="file" id="file" style="display: none"/>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+{#                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio"  name="sex" value="男" checked="checked" >男</label><label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="sex" value="女">女</label>#}
+                            <br>
+                            <label for="image_file">用户名&nbsp;：</label><input id="username" type="text" placeholder="用户名" value="{{ person.username }}"><small id="username_error" style="color: darkred;">该用户名已存在</small><br>
+                            <label for="image_file">手机号码：</label><input id="phone" type="text" placeholder="手机号码" value="{{ person.phone }}"><small id="phone_error" style="color: darkred;">手机号码格式不正确</small><br>
+                            <label for="image_file">收货地址：</label><input id="address" type="text" placeholder="收货地址" value="{{ person.address }}">
+{#                            <input id="submit_change" type="submit" value="提交">#}
+                            <button id="submit_change">提交</button>
+{#                        </form>#}
+                        </div>
+{#                        <a href="#"><span class="label label-warning" style="text-align: center;">修改个人资料</span></a>#}
+					</div>
+{#                    <a href="#"><span class="label label-warning">修改个人资料</span></a>#}
+				</div>
+
+			<div class="clearfix"> </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script  src="{% static "js/selects.js" %}"></script>
+    <script  src="{% static "js/auto1.js" %}"></script>
+    <script>
+        //全局变量
+        school_val = 1;
+        major_val = 1;
+        grade_val = '大一';
+        //头像部分js
+        $(".updatepanel").height($(".panel-info").height());
+        $("body").on("change", "#file", function () {
+            add();
+            var imgFile = this.files[0];
+            var fr = new FileReader();
+            fr.onload = function () {
+                var imgs = document.getElementsByClassName('updateimg');
+                imgs[imgs.length - 1].src = fr.result;
+            };
+            fr.readAsDataURL(imgFile);
+        });
+
+        function add() {
+            var html = "<div class='col-sm-4'><div class='panel panel-info' style=\"background: #fff6e5; border:2px solid #ffdd72;\"><div class='panel-heading' style=\"background: #ffdd72; border: 2px solid #ffdd72;\"><i class='fa fa-times' style=\"color: #ffffff\"></i></div><div class='panel-body' style='text-align: center;'><div class='row'><div class='col-sm-12 col-md-12'><img class='updateimg img-responsive' src='' style='width: inherit;height: 210px;'/></div></div></div></div></div>";
+            $("#updatebox").before(html);
+            $("#updatebox").hide();
+        }
+
+        $("body").on("click", ".fa-times", function () {
+            {#              alert('');#}
+            $(this).parent().parent().parent().remove();
+            $("#updatebox").show();
+        });
+        //获取学校、专业、年级id
+        function get_scool_major_grade() {
+            var csrftokens = $("input[name='csrfmiddlewaretoken']").val();
+            $.ajax({
+                url: '/get_school_major_grade/',
+                type: 'POST',
+                dataType:'json',
+                data: {
+                    csrfmiddlewaretoken: csrftokens
+                },
+                success: function (data) {
+    {#                var data = $.parseJSON(data1);#}
+                    school_val = data['school'];
+                    major_val = data['major'];
+                    grade_val = data['grade'];
+                }
+        })
+        }
+        /*自动填充学校、专业、年级*/
+        function get_school_infos(province1, city, area, school, major, grade) {
+
+            get_scool_major_grade();
+
+            school.empty();
+            school.append("<option value='0'>=请选择学校=</option>");
+            major.empty();
+            major.append("<option value='0'>=请选择专业=</option>");
+            grade.empty();
+            grade.append("<option>=请选择年级=</option>");
+
+            var csrftokens = $("input[name='csrfmiddlewaretoken']").val();
+            $.ajax({
+                url: '/get_school_infos/',
+                type: 'POST',
+                traditional: false,
+                data: {
+                    csrfmiddlewaretoken: csrftokens,
+                    province: province1.find("option:selected").text(),
+                    city: city.find("option:selected").text(),
+                    country: area.find("option:selected").text(),
+                    school: school_val
+                },
+                success: function (result) {
+                    var result1 = $.parseJSON(result);
+                    //学校部分
+                    var schools = result1['school_list'];
+                    for(var i=0; i<schools.length; i++){
+                        var data = schools[i];
+                        var schoolOpt = document.createElement(('option'));
+                        schoolOpt.innerText = data.name;
+                        schoolOpt.value = data.id;
+                        if(data.id == school_val){
+                            schoolOpt.selected = 'selected';
+                        }
+                        school.append(schoolOpt);
+                    }
+                    //专业部分
+                    var majors = result1['major_list'];
+                    console.log(majors);
+                    for(var j=0; j<majors.length; j++){
+                        var data1 = majors[j];
+                        var majorOpt = document.createElement(('option'));
+                        majorOpt.innerText = data1.name;
+                        majorOpt.value = data1.id;
+                        if(data1.id == major_val){
+                            majorOpt.selected = 'selected';
+                        }
+                        major.append(majorOpt);
+                    }
+                    //年级部分
+                    var grades = ['大一', '大二', '大三', '大四', '研一', '研二', '研三'];
+                    for (var n = 0; n < grades.length; n++) {
+                            var gradesOpt = document.createElement('option');
+                            gradesOpt.innerText = grades[n];
+                            gradesOpt.value = grades[n];
+                            if(grades[n] == grade_val){
+                                gradesOpt.selected = 'selected';
+                            }
+                            grade.append(gradesOpt);
+                    }
+                }
+            })
+        }
+        //页面加载时自动填充选项和用户名、手机号码、收货地址等基本信息
+        $(document).ready(function () {
+            $("#phone_error").hide();
+            $("#username_error").hide();
+
+            showProv($("#prov"));
+            //自动填充省份、城市、区县、学校、专业、年级
+            for(var i=0;i<province.length;i++){
+                    if("{{ person.province }}" == province[i].name){
+                        $("#prov").val(i);
+                        showCity($('#prov'), $('#city'), $("#district"), $("#school"), $('#major'), $('#grade'));
+                        for(var j=0;j<province[i]["city"].length; j++){
+                            if("{{ person.city }}" == province[i]["city"][j].name){
+                                $("#city").val(j);
+                                showCountry($('#prov'), $('#city'), $("#district"), $("#school"), $('#major'), $('#grade'));
+                                for(var k = 0; k < province[i]["city"][j].districtAndCounty.length; k++){
+                                    if("{{ person.district }}" == province[i]["city"][j].districtAndCounty[k]){
+                                        $("#district").val(k);
+{#                                        selecCountry($('#prov'), $('#city'), $("#district"), $("#school"), $('#major'), $('#grade'));#}
+{#                                        find_school();#}
+                                        setTimeout(function () {
+{#                                            $("#school").val({{ person.school }});#}
+{#                                            selecSchool($('#prov'), $('#city'), $("#district"), $("#school"), $('#major'), $('#grade'));#}
+                                            get_school_infos($('#prov'), $('#city'), $("#district"), $("#school"), $('#major'), $('#grade'));
+                                        },100);
+{#                                        setTimeout(function () {#}
+{#                                            $("#major").val({{ person.major }});#}
+{#                                            selectMajor($('#prov'), $('#city'), $("#district"), $("#school"), $('#major'), $('#grade'));#}
+{#                                            },100);#}
+{#                                        setTimeout(function () {#}
+{#                                            $("#grade").val({{ person.grade }});#}
+{#                                        });#}
+
+                                    }
+                                }
+{#                                break;#}
+                            }
+                        }
+{#                        break;#}
+                    }
+
+                }
+{#            $("#school").val({{ person.school }});#}
+{#            $("#ceshi").text($("#school").val());#}
+{#            selecSchool($('#prov'), $('#city'), $("#district"), $("#school"), $('#major'), $('#grade'));#}
+{#            $("#ceshi").text($("#school").val());#}
+{#            $("#major").val({{ person.major }});#}
+{#            selectMajor($('#prov'), $('#city'), $("#district"), $("#school"), $('#major'), $('#grade'));#}
+{#            $("#grade").val({{ person.grade }});#}
+        });
+
+        //提交修改
+        $("#submit_change").click(function () {
+            var grade = $("#grade").val();
+            var major = $("#major").val();
+            var school = $("#school").val();
+{#            var province1 = $("#prov").val();#}
+{#            var city1 = $("#city").val();#}
+{#            var country1 = $("#district").val();#}
+
+            if(grade == '' || major == '0' || school == '0'){
+                alert("省市区-学校专业年级信息不完整！");
+                return
+            }
+
+            var phone = $("#phone").val();
+            var address = $("#address").val();
+            var username = $("#username").val();
+
+            var csrftokens = $("input[name='csrfmiddlewaretoken']").val();
+            if(phone == '' || address == '' || username == ''){
+                 alert("请填写完整信息！");
+                return
+            }
+            var formData = new FormData();
+            var filecontent=document.getElementById('file').value;
+            var has_img = 0;
+            if(filecontent != ""){
+                formData.append("myfile", document.getElementById("file").files[0]);
+                has_img = 1;
+            }
+            formData.append("csrfmiddlewaretoken", csrftokens);
+            formData.append("major", major);
+            formData.append("grade", grade);
+            formData.append("username", username);
+            formData.append("phone", phone);
+            formData.append("address", address);
+            formData.append("has_img", has_img);
+            $.ajax({
+                    url: "/person/change_info/",
+                    type: "POST",
+                    data: formData,
+                    dataType:'json',
+
+                    /**
+                     * * *必须false才会自动加上正确的Content-Type
+                     * * */
+                    contentType: false,
+                    /**
+                     * * * 必须false才会避开jQuery对 formdata 的默认处理
+                     * * * XMLHttpRequest会对 formdata 进行正确的处理
+                     * */
+                    processData: false,
+                    success: function (data) {
+                        if(data['result'] == 'username_error'){
+                            $("#username_error").show();
+                            $("#phone_error").hide();
+                        }
+                        else if(data['result'] == 'phone_error'){
+                            $("#phone_error").show();
+                            $("#username_error").hide();
+                        }
+                        else {
+                            alert(data['result']);
+                            setTimeout(window.location.href = '/person/personal_info/', 3);
+                        }
+                        },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+        })
+    </script>
+{% endblock %}

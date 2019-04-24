@@ -1,0 +1,19 @@
+{% extends "app/base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <div class="container">
+			<div class="col-md-4 products-left">
+				<div class="categories animated wow slideInUp" data-wow-delay=".5s">
+					<h3>Categories</h3>
+					<ul class="cate">
+						<li><a href="/student/show_courses/">choose course</a></li>
+                        <li><a href="/student/my_courses/">my courses</a></li>
+						<li><a href="/student/change_info/">change info</a></li>
+					</ul>
+				</div>
+            </div>
+    {% block personal-right %}
+    {% endblock %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "app/professor_base.html" %}
+{% load staticfiles %}
+{% load render_table from django_tables2 %}
+{% block personal-right %}
+    <br><br>
+    <h4>{{ course_name }} EXAMS</h4>
+    <br><br>
+    <div class="ibox-content m-b-sm border-bottom" style="overflow: hidden">
+        <div class="flexpos" >
+            <div class="form-inline">
+{#                <input class="form-control" type="text" id="sousuo" placeholder="course name" style="margin-left: 1%;" {% if target %} value="{{ target }}"{% endif %}>#}
+{#                <a class="btn btn-primary" href="#" id="sousuobtn">搜索</a>#}
+                <a style="margin-left: 5%; background-color: #ffa62e" class="btn btn-primary" href="/professor/exam/new/{{ id }}"> new exam</a>
+    </div>
+        </div>
+    </div>
+    {% if exam_table %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        {% render_table exam_table "app/table.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            {% endif %}
+{% endblock %}

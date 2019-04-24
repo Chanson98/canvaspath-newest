@@ -1,0 +1,112 @@
+{% extends "app/base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <!-- breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+				<li class="active">Change PW</li>
+			</ol>
+		</div>
+	</div>
+<!-- //breadcrumbs -->
+<!-- register -->
+    {% if not no_user %}
+	<div class="register">
+		<div class="container">
+			<h3 class="animated wow zoomIn" data-wow-delay=".5s" >CHANGE PASSWORD</h3>
+			<p class="est animated wow zoomIn" data-wow-delay=".5s">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+				deserunt mollit anim id est laborum.</p>
+			<div class="login-form-grids">
+                <div class="animated wow slideInUp" data-wow-delay=".5s">
+                    {% csrf_token %}
+                    <div>
+                        <label for="username">Email:</label>
+                        <input id="username" type="text" readonly="readonly" value="{{ username }}">
+                    </div>
+					<div>
+                        <label for="pre_password">password:</label>
+                        <input id="pre_password" type="password" required="required" ><small id="pre_pwd_error" style="color: darkred;">password error</small>
+                    </div>
+                    <div>
+                        <label for="new_password">new password</label>
+                        <input id="new_password" type="password" required="required" ><small id="pwd_error" style="color: darkred;"></small>
+                    </div>
+                    <div>
+                        <label for="password_confirm">confirm:</label>
+                        <input id="password_confirm" type="password" required="required" ><small id="pwd_confirm_error" style="color: darkred;">does not match</small>
+                    </div>
+
+                    <button id="submit_change">Change</button>
+{#					<input id="submit_register" type="submit" value="Register">#}
+{#				</form>#}
+			</div>
+{#			<div class="register-home animated wow slideInUp" data-wow-delay=".5s">#}
+{#				<a href="/">Home</a>#}
+			</div>
+		</div>
+	</div>
+    {% endif %}
+<!-- //register -->
+{%  endblock %}
+
+{% block script %}
+    <script  src="{% static "js/selects.js" %}"></script>
+    <script>
+
+    $(document).ready(function () {
+
+        $("#pre_pwd_error").hide();
+        $("#pwd_error").hide();
+        $("#pwd_confirm_error").hide();
+
+    });
+
+
+    $("#submit_change").click(function () {
+        var pre_password = $("#pre_password").val();
+        var new_password = $("#new_password").val();
+        var password_confirm = $("#password_confirm").val();
+        var csrftokens = $("input[name='csrfmiddlewaretoken']").val();
+        if(pre_password == '' || new_password == '' || password_confirm == ''){
+             alert("请填写完整信息！");
+            return
+        }
+        var data = {
+            'csrfmiddlewaretoken': csrftokens,
+            'pre_password': pre_password,
+            'new_password': new_password,
+            'password_confirm': password_confirm
+        };
+{#        alert(username);#}
+        $.ajax({
+            url: '/change_pw/',
+            type: 'POST',
+            dataType:"json",
+            data: data,
+            success: function (data) {
+                if(data['result'] == 'pre_pwd_error'){
+                    $("#pre_pwd_error").show();
+                    $("#pwd_error").hide();
+                    $("#pwd_confirm_error").hide();
+                }
+                else if(data['result'] == 'pwd_confirm_error'){
+                    $("#pwd_confirm_error").show();
+                    $("#pre_pwd_error").hide();
+                    $("#pwd_error").hide();
+                }
+                else if(data['result'] == 'success'){
+                    alert("success");
+                    setTimeout(window.location.href = '/', 3);
+                }
+            },
+            error: function () {
+                alert("failed");
+            }
+        });
+    });
+
+    </script>
+{% endblock %}
+

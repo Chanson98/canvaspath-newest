@@ -1,0 +1,118 @@
+{% extends "app/student_base.html" %}
+{% load staticfiles %}
+{% load render_table from django_tables2 %}
+<head>
+        {##}
+        {#        <meta charset="utf-8">#}
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+              integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+              crossorigin="anonymous">
+        <style>
+            .fa-times {
+                font-size: 15px;
+            }
+
+            .panel {
+                height: 285px;
+                margin-bottom: 0;
+                margin-top: 10px;
+            }
+
+            .panel-heading {
+                text-align: right;
+            }
+
+            /*加号*/
+            .icon-add-50 {
+                position: relative;
+                box-sizing: border-box;
+                width: 50%;
+                height: 50%;
+                border: 2px dashed #ffdd72;
+                border-radius: 50%;
+            }
+
+            .icon-add-50:before {
+                content: '';
+                position: absolute;
+                width: 30px;
+                height: 2px;
+                left: 50%;
+                top: 50%;
+                margin-left: -15px;
+                margin-top: -1px;
+                background-color: #ffdd72;
+            }
+
+            .icon-add-50:after {
+                content: '';
+                position: absolute;
+                width: 2px;
+                height: 30px;
+                left: 50%;
+                top: 50%;
+                margin-left: -1px;
+                margin-top: -15px;
+                background-color: #ffdd72;
+            }
+
+            .updatepanel {
+                border: 1px solid #ffdd72;
+                text-align: center;
+            }
+
+            .updatepanel .addbox {
+                vertical-align: middle;
+                height: 285px;
+                line-height: 285px;
+            }
+
+{#            #image {#}
+{#                overflow: hidden;#}
+{#            }#}
+        </style>
+    </head>
+{% block personal-right %}
+    
+    <div>
+    <br><br>
+    <h4>{{ course_name }} DETAILS</h4>
+    
+{#    <div class="login-form-grids" style="width: 100%;">#}
+        <label for="final_score">Final Score:</label>
+        <p id="final_score">{{ final_score }}</p>
+    
+        <label for="description">Course_description:</label>
+        <p>{{ description }}</p>
+    
+        <label for="prof_team">Prof_team:</label>
+        <div id="prof_team">
+            {% for p in professors %}
+                <p>{{ p.professor.email }}</p>
+            {% endfor %}
+        </div>
+    
+    
+        <label for="homeworks">Homeworks:</label>
+        {% for h in homeworks %}
+
+            <div>
+                <p>homework_id: {{ h.no }}</p>
+                <p>grade: {{ h.grade }}</p>
+                <p>details: {{ h.detail }}</p>
+            
+            </div>
+        {% endfor %}
+    
+    
+        <label for="exams">exams:</label>
+        {% for e in exams %}
+            <div>
+                <p>exam_id: {{ e.no }}</p>
+                <p>grade: {{ e.grade }}</p>
+                <p>details: {{ e.detail }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{#    </div>#}
+{% endblock %}

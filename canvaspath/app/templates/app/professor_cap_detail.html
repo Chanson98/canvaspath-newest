@@ -1,0 +1,134 @@
+{% extends "app/professor_base.html" %}
+{% load staticfiles %}
+{% load render_table from django_tables2 %}
+{% block personal-right %}
+    <br><br>
+    <h4>Cap Groups</h4>
+    {% csrf_token %}
+    <br><br>
+
+    <div >
+            <legend>Import Members:</legend>
+            <form enctype="multipart/form-data" method="post" id="net">
+                {% csrf_token %}
+                <input type="file" id="myfile" name="myfile" style="height: 32px;font-size: 1.4rem;"/>
+                <br><br>
+                <button type="button" id="upload" class="btn met2" style="width: 82px; margin:auto 4% auto auto; color: #FFFFFF">upload</button>
+            </form>
+{#           <button id="muban"  class="btn btn-primary" onclick="window.open('{% static 'ScratchJR/jr_import_students.xlsx' %}','_self');" style="width: 82px;margin:1% auto auto auto">模版下载</button>#}
+ </div>
+
+    <div id="change_score">
+        <label for="score">input score:</label>
+        <input id="score" type="text">
+        <input class="btn btn btn-primary" type="submit" value="submit" style="margin-top: 15px; background-color: #ffb81c" onclick="change()">
+
+    </div>
+
+    <div id="members">
+
+    </div>
+
+    {% if team_table %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        {% render_table team_table "app/table.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+{% endblock %}
+{% block script %}
+    <script>
+    current_id = 0;
+    $(document).ready(function () {
+{#        $("#members").hide();#}
+       $("#change_score").hide();
+    });
+    function show_members(pk) {
+        current_id = pk;
+        var csrftokens = $("input[name='csrfmiddlewaretoken']").val();
+            $.ajax({
+                url: '/professor/cap/{{ id }}/',
+                type: 'POST',
+                dataType:'json',
+                data: {
+                    'csrfmiddlewaretoken': csrftokens,
+                    'current_id':current_id,
+                    'flag': 'members'
+                },
+                success: function (data) {
+                    $("#members").empty();
+                    $("#members").append("<label>Members:</label>");
+{#                    var d = $.parseJSON(data);#}
+                    console.log(data);
+                    for(var i=0;i<data.length;i++){
+                        console.log(data[i]);
+                        $("#members").append("<p>" + data[i] + "</p>");
+                    }
+                }
+        });
+{#        $("#members").show();#}
+        return false;
+    }
+    function change_score(pk) {
+        current_id = pk;
+        $("#change_score").show();
+        return false;
+    }
+    function change() {
+        var csrftokens = $("input[name='csrfmiddlewaretoken']").val();
+        var score = $("#score").val();
+            $.ajax({
+                url: '/professor/cap/{{ id }}/',
+                type: 'POST',
+                dataType:'json',
+                data: {
+                    'csrfmiddlewaretoken': csrftokens,
+                    'current_id':current_id,
+                    'score': score,
+                    'flag':'score'
+                },
+                success: function (data) {
+                    $("#change_score").hide();
+                    },
+                error: function () {
+                    $("#change_score").hide();
+                    alert('failed to change');
+                }
+        })
+    }
+
+     $("#upload").click(function () {
+            var myfilecontent=document.getElementById('myfile').value;
+            if(myfilecontent=="")
+            {
+                alert('no file!');
+                return false;
+            }
+            else {
+                var formData = new FormData();
+                formData.append("myfile", document.getElementById("myfile").files[0]);
+                formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+                formData.append('flag', 'new');
+                $.ajax({
+                    url: "/professor/cap/{{ id }}/",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert('Success');
+                    },
+                    error: function () {
+                        alert("failed to upload！");
+                    }
+                });
+            }
+    });
+    </script>
+{% endblock %}

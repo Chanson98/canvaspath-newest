@@ -1,0 +1,56 @@
+{% extends "app/admin_base.html" %}
+{% load staticfiles %}
+{% load render_table from django_tables2 %}
+{% block personal-right %}
+    <div >
+    <br><br>
+            <legend>Add Prof _Team Member:</legend>
+            <form enctype="multipart/form-data" method="post" id="net">
+                {% csrf_token %}
+                <input type="file" id="myfile" name="myfile" style="height: 32px;font-size: 1.4rem;"/>
+                <br><br>
+                <button type="button" id="upload" class="btn met2" style="width: 82px; margin:auto 4% auto auto; color: #FFFFFF">upload</button>
+            </form>
+{#           <button id="muban"  class="btn btn-primary" onclick="window.open('{% static 'ScratchJR/jr_import_students.xlsx' %}','_self');" style="width: 82px;margin:1% auto auto auto">模版下载</button>#}
+ </div>
+    {% if members %}
+        <div>
+        <br><br>
+            <legend>Current Members:</legend>
+            {% for m in members %}
+                <p>{{ m.professor.email }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+{% block script %}
+    <script src={% static "js/bootstrap-3.1.1.min.js"%}></script>
+    <script>
+        $("#upload").click(function () {
+            var myfilecontent=document.getElementById('myfile').value;
+            if(myfilecontent=="")
+            {
+                alert('no file!');
+                return false;
+            }
+            else {
+                var formData = new FormData();
+                formData.append("myfile", document.getElementById("myfile").files[0]);
+                formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+                $.ajax({
+                    url: "/administrator/section_prof_team/{{ id }}/",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                    },
+                    error: function () {
+                        alert("failed to upload！");
+                    }
+                });
+            }
+    });
+    </script>
+{% endblock %}

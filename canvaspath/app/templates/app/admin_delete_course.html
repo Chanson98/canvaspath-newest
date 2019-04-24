@@ -1,0 +1,21 @@
+{% extends "app/admin_base.html" %}
+{% load staticfiles %}
+{% load render_table from django_tables2 %}
+{% block personal-right %}
+   <div class="wrapper wrapper-content ibox-content">
+    <form class="text-center" action="" method="post" style="margin-top: 10%;" xmlns="http://www.w3.org/1999/html">{% csrf_token %}
+        <h1 style="line-height: 3.5rem;">Are you sure to delete the course named :"<strong>{{ object.course_name }}</strong>"</h1>
+        <button class="btn btn-black" style="font-size: 2.9rem;margin-top: 5%;background-color: #ffa62e;width: 15%" id="cancel">cancel</button>
+        <input class="btn btn-primary" type="submit" value="sure" style="font-size: 2.9rem;margin-top: 5%;background-color: #ffa62e" />
+    </form>
+    </div>
+{% endblock %}
+{% block script %}
+{#    <script src={% static "js/jquery.cookie.js"%}></script>#}
+    <script type="text/javascript">
+        $("#cancel").click(function () {
+            window.location.href = "/administrator/course_management/";
+            return false;
+        })
+    </script>
+{% endblock %}
